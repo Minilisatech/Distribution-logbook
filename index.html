@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PharmChain — Distributor Registration Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ===== TOKENS ===== */
+:root {
+  --navy:      #0a1f44;
+  --navy2:     #102a5e;
+  --blue:      #1a56db;
+  --blue-lt:   #e8f0fe;
+  --teal:      #0ea5a0;
+  --teal-lt:   #e6f8f7;
+  --green:     #16a34a;
+  --green-lt:  #dcfce7;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --red:       #dc2626;
+  --red-lt:    #fee2e2;
+  --bg:        #f0f4f9;
+  --surface:   #ffffff;
+  --border:    #dde3ee;
+  --border2:   #c5d0e0;
+  --text:      #1e2d3d;
+  --sub:       #4b5d73;
+  --muted:     #8898aa;
+  --ff-h:      'Syne', sans-serif;
+  --ff-b:      'DM Sans', sans-serif;
+  --ff-m:      'JetBrains Mono', monospace;
+  --r:         10px;
+  --r-lg:      16px;
+  --sh:        0 2px 16px rgba(10,31,68,0.08);
+  --sh-lg:     0 12px 48px rgba(10,31,68,0.15);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ff-b);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ===== PAGE LAYOUT ===== */
+.page-wrap {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 100vh;
+}
+
+/* ===== LEFT PANEL ===== */
+.left-panel {
+  background: linear-gradient(160deg, var(--navy) 0%, #0f3069 55%, var(--navy2) 100%);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 32px;
+  z-index: 10;
+}
+
+.left-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(14,165,160,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(26,86,219,0.12) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.left-content { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100%; }
+
+.brand {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 40px;
+}
+.brand-icon {
+  width: 42px; height: 42px; border-radius: 11px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; box-shadow: 0 4px 16px rgba(26,86,219,0.35);
+}
+.brand-name { font-family: var(--ff-h); font-size: 1.25rem; font-weight: 800; color: #fff; }
+.brand-name span { color: #5eead4; }
+
+.left-panel h2 {
+  font-family: var(--ff-h); font-size: 1.6rem; font-weight: 800;
+  color: #fff; line-height: 1.2; margin-bottom: 12px;
+}
+.left-panel h2 span { color: #5eead4; }
+.left-panel > .left-content > p { color: rgba(255,255,255,0.6); font-size: 0.88rem; line-height: 1.7; margin-bottom: 32px; }
+
+/* Progress Steps */
+.progress-steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 36px; }
+.progress-step {
+  display: flex; align-items: flex-start; gap: 14px; position: relative;
+}
+.progress-step + .progress-step { margin-top: 0; }
+.ps-left { display: flex; flex-direction: column; align-items: center; }
+.ps-circle {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-h); font-size: 0.8rem; font-weight: 800;
+  border: 2px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.4);
+  background: transparent; transition: all 0.3s; z-index: 1;
+}
+.ps-circle.active  { background: var(--teal); border-color: var(--teal); color: #fff; box-shadow: 0 0 0 4px rgba(14,165,160,0.2); }
+.ps-circle.done    { background: var(--blue); border-color: var(--blue); color: #fff; }
+.ps-line { width: 2px; flex: 1; min-height: 32px; background: rgba(255,255,255,0.1); margin: 3px 0; }
+.ps-line.done { background: var(--blue); }
+.ps-content { padding-bottom: 28px; }
+.ps-title { font-family: var(--ff-h); font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.4); margin-bottom: 3px; transition: color 0.3s; }
+.ps-title.active { color: #fff; }
+.ps-title.done   { color: rgba(255,255,255,0.7); }
+.ps-desc { font-size: 0.76rem; color: rgba(255,255,255,0.3); font-family: var(--ff-m); }
+.ps-desc.active { color: rgba(255,255,255,0.55); }
+
+/* Benefits */
+.benefits { margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 12px; }
+.benefit { display: flex; align-items: flex-start; gap: 10px; }
+.benefit-icon { width: 28px; height: 28px; border-radius: 7px; background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.benefit-text strong { display: block; font-size: 0.82rem; color: #fff; font-weight: 600; }
+.benefit-text span { font-size: 0.75rem; color: rgba(255,255,255,0.45); }
+
+/* ===== FORM AREA ===== */
+.form-area {
+  padding: 48px 56px;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+/* Top bar */
+.form-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 36px;
+}
+.form-topbar-back {
+  display: flex; align-items: center; gap: 6px; font-size: 0.85rem;
+  color: var(--muted); cursor: pointer; transition: color 0.2s;
+  background: none; border: none; font-family: var(--ff-b);
+}
+.form-topbar-back:hover { color: var(--blue); }
+.form-progress-bar {
+  flex: 1; max-width: 300px; height: 6px; background: var(--border);
+  border-radius: 99px; overflow: hidden; margin: 0 20px;
+}
+.form-progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue), var(--teal)); transition: width 0.4s ease; }
+.step-label { font-family: var(--ff-m); font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+
+/* Section heading */
+.section-heading {
+  margin-bottom: 28px;
+}
+.section-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--ff-m); font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--blue); background: var(--blue-lt);
+  padding: 4px 12px; border-radius: 99px; margin-bottom: 10px;
+}
+.section-heading h2 { font-family: var(--ff-h); font-size: 1.55rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+.section-heading p { font-size: 0.88rem; color: var(--sub); }
+
+/* Step wrapper */
+.step { display: none; animation: fadeUp 0.3s ease; }
+.step.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Card / fieldset */
+.form-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); box-shadow: var(--sh);
+  margin-bottom: 20px; overflow: hidden;
+}
+.form-card-header {
+  padding: 16px 24px; border-bottom: 1.5px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(90deg, var(--blue-lt), var(--surface));
+}
+.fch-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.fch-icon.teal { background: var(--teal); }
+.fch-icon.green { background: var(--green); }
+.fch-icon.amber { background: var(--amber); }
+.fch-icon.red   { background: var(--red); }
+.fch-icon.navy  { background: var(--navy); }
+.fch-title { font-family: var(--ff-h); font-size: 0.95rem; font-weight: 700; color: var(--navy); }
+.fch-sub { font-size: 0.75rem; color: var(--muted); font-family: var(--ff-m); }
+.form-card-body { padding: 24px; }
+
+/* Form fields */
+.field-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.field-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.field-full   { grid-column: 1 / -1; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-size: 0.76rem; font-weight: 700; color: var(--navy);
+  letter-spacing: 0.4px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 5px;
+}
+.req { color: var(--red); font-size: 0.8rem; }
+.field input, .field select, .field textarea {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: 11px 14px; font-size: 0.92rem;
+  color: var(--text); outline: none; font-family: var(--ff-b);
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+  width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+  background: #fafcff;
+}
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); font-size: 0.88rem; }
+.field textarea { resize: vertical; min-height: 85px; }
+.field select option { background: var(--surface); }
+.field-hint { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+.field-error { font-size: 0.74rem; color: var(--red); margin-top: 2px; display: none; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--red); }
+.field.invalid .field-error { display: block; }
+.field.valid input, .field.valid select { border-color: var(--green); background: #f9fffe; }
+
+/* Input with icon */
+.input-wrap { position: relative; }
+.input-wrap input { padding-left: 40px; }
+.input-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; color: var(--muted); }
+.input-suffix { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); font-size: 0.78rem; color: var(--muted); font-family: var(--ff-m); }
+
+/* Phone field */
+.phone-wrap { display: flex; gap: 8px; }
+.phone-code { width: 100px; flex-shrink: 0; }
+
+/* Radio / checkbox group */
+.radio-group { display: flex; flex-wrap: wrap; gap: 10px; }
+.radio-opt {
+  display: flex; align-items: center; gap: 8px;
+  border: 1.5px solid var(--border); border-radius: 9px;
+  padding: 10px 16px; cursor: pointer; transition: all 0.15s;
+  font-size: 0.88rem; color: var(--sub); background: var(--surface);
+}
+.radio-opt:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-lt); }
+.radio-opt input[type=radio], .radio-opt input[type=checkbox] { accent-color: var(--blue); width: 15px; height: 15px; cursor: pointer; }
+.radio-opt.selected { border-color: var(--blue); color: var(--blue); background: var(--blue-lt); font-weight: 600; }
+
+/* Toggle switch */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.toggle-row:last-child { border-bottom: none; }
+.toggle-info strong { display: block; font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.toggle-info span { font-size: 0.78rem; color: var(--muted); }
+.toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-slider {
+  position: absolute; inset: 0; border-radius: 99px;
+  background: var(--border2); cursor: pointer; transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute; width: 18px; height: 18px;
+  background: #fff; border-radius: 50%; top: 3px; left: 3px;
+  transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--blue); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* File upload */
+.file-upload {
+  border: 2px dashed var(--border2); border-radius: var(--r-lg);
+  padding: 28px; text-align: center; cursor: pointer;
+  transition: all 0.2s; background: var(--bg);
+}
+.file-upload:hover { border-color: var(--blue); background: var(--blue-lt); }
+.file-upload.has-file { border-color: var(--green); background: var(--green-lt); border-style: solid; }
+.fu-icon { font-size: 32px; margin-bottom: 10px; }
+.fu-title { font-family: var(--ff-h); font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.fu-sub { font-size: 0.78rem; color: var(--muted); }
+.fu-types { font-size: 0.72rem; color: var(--muted); margin-top: 6px; font-family: var(--ff-m); }
+
+/* Coverage zone map visual */
+.zone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.zone-card {
+  border: 1.5px solid var(--border); border-radius: var(--r); padding: 12px 10px;
+  text-align: center; cursor: pointer; transition: all 0.15s; background: var(--surface);
+}
+.zone-card:hover { border-color: var(--blue); background: var(--blue-lt); }
+.zone-card.selected { border-color: var(--blue); background: var(--blue-lt); }
+.zone-card input[type=checkbox] { display: none; }
+.zone-icon { font-size: 20px; margin-bottom: 5px; }
+.zone-name { font-family: var(--ff-h); font-size: 0.78rem; font-weight: 700; color: var(--navy); }
+.zone-states { font-size: 0.68rem; color: var(--muted); font-family: var(--ff-m); margin-top: 3px; }
+
+/* Fleet counter */
+.fleet-counter { display: flex; align-items: center; gap: 12px; }
+.fleet-btn {
+  width: 36px; height: 36px; border-radius: 9px; border: 1.5px solid var(--border);
+  background: var(--surface); font-size: 1.2rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; font-family: var(--ff-h); color: var(--sub);
+}
+.fleet-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-lt); }
+.fleet-num {
+  width: 60px; text-align: center; font-family: var(--ff-h);
+  font-size: 1.4rem; font-weight: 800; color: var(--navy);
+}
+
+/* Info box */
+.info-box {
+  border-radius: var(--r); padding: 14px 16px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.info-box.blue  { background: var(--blue-lt); border: 1px solid rgba(26,86,219,0.2); }
+.info-box.amber { background: var(--amber-lt); border: 1px solid rgba(217,119,6,0.2); }
+.info-box.green { background: var(--green-lt); border: 1px solid rgba(22,163,74,0.2); }
+.info-box.red   { background: var(--red-lt);   border: 1px solid rgba(220,38,38,0.2); }
+.ib-icon { font-size: 16px; margin-top: 2px; flex-shrink: 0; }
+.ib-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 2px; color: var(--text); }
+.ib-text  { font-size: 0.82rem; color: var(--sub); line-height: 1.6; }
+
+/* Review table */
+.review-section { margin-bottom: 20px; }
+.review-section-title {
+  font-family: var(--ff-h); font-size: 0.82rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted);
+  margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid var(--border);
+}
+.review-table { width: 100%; border-collapse: collapse; }
+.review-table td { padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; vertical-align: top; }
+.review-table tr:last-child td { border-bottom: none; }
+.review-table td:first-child { color: var(--muted); width: 40%; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.review-table td:last-child { color: var(--text); font-weight: 500; }
+.edit-btn { font-size: 0.75rem; color: var(--blue); cursor: pointer; font-weight: 600; margin-left: 8px; text-decoration: underline; }
+
+/* Buttons */
+.btn-row { display: flex; align-items: center; gap: 12px; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 28px; border-radius: var(--r); font-family: var(--ff-h);
+  font-size: 0.92rem; font-weight: 700; border: none; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #1447c0; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,86,219,0.3); }
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { background: #0c8e89; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14,165,160,0.3); }
+.btn-outline { background: transparent; border: 2px solid var(--border2); color: var(--sub); }
+.btn-outline:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-lt); }
+.btn-ghost { background: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--sub); }
+.btn-lg { padding: 14px 36px; font-size: 1rem; }
+
+/* Success state */
+.success-screen {
+  display: none; text-align: center; padding: 60px 40px;
+  animation: fadeUp 0.4s ease;
+}
+.success-screen.active { display: block; }
+.success-ring {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-lt), #bbf7d0);
+  border: 3px solid var(--green); display: flex; align-items: center;
+  justify-content: center; font-size: 44px; margin: 0 auto 24px;
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-screen h2 { font-family: var(--ff-h); font-size: 1.8rem; color: var(--navy); margin-bottom: 10px; }
+.success-screen p { color: var(--sub); max-width: 460px; margin: 0 auto 24px; }
+
+.blockchain-hash-display {
+  background: var(--navy); border-radius: var(--r-lg); padding: 20px 24px;
+  max-width: 540px; margin: 0 auto 28px;
+}
+.bhd-label { font-family: var(--ff-m); font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; margin-bottom: 6px; }
+.bhd-hash { font-family: var(--ff-m); font-size: 0.78rem; color: #5eead4; word-break: break-all; line-height: 1.7; }
+.bhd-block { margin-top: 10px; font-family: var(--ff-m); font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+
+.next-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 560px; margin: 0 auto; }
+.next-step { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px 14px; text-align: center; }
+.ns-icon { font-size: 24px; margin-bottom: 8px; }
+.ns-title { font-family: var(--ff-h); font-size: 0.82rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.ns-text { font-size: 0.75rem; color: var(--muted); }
+
+/* Char counter */
+.char-counter { text-align: right; font-size: 0.72rem; color: var(--muted); margin-top: 3px; font-family: var(--ff-m); }
+
+/* Tag pills */
+.tag-input-wrap { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--surface); min-height: 46px; align-items: center; }
+.tag-pill { display: flex; align-items: center; gap: 5px; background: var(--blue-lt); color: var(--blue); border-radius: 99px; padding: 3px 10px; font-size: 0.78rem; font-weight: 600; }
+.tag-pill button { background: none; border: none; cursor: pointer; color: var(--blue); font-size: 12px; line-height: 1; padding: 0; margin-left: 2px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .page-wrap { grid-template-columns: 1fr; }
+  .left-panel { position: relative; height: auto; padding: 28px 24px; }
+  .form-area { padding: 28px 20px; }
+  .field-grid, .field-grid-3 { grid-template-columns: 1fr; }
+  .zone-grid { grid-template-columns: repeat(2, 1fr); }
+  .next-steps { grid-template-columns: 1fr; }
+}
+
+/* Divider */
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 99px;
+  font-size: 0.7rem; font-weight: 600; font-family: var(--ff-m);
+}
+.badge-blue  { background: var(--blue-lt); color: var(--blue); }
+.badge-green { background: var(--green-lt); color: var(--green); }
+.badge-amber { background: var(--amber-lt); color: var(--amber); }
+.badge-navy  { background: var(--navy); color: #fff; }
+
+/* Tooltip */
+.tooltip-wrap { position: relative; display: inline-flex; }
+.tooltip-icon { width: 16px; height: 16px; border-radius: 50%; background: var(--border); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: help; font-weight: 700; flex-shrink: 0; }
+.tooltip-box {
+  display: none; position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: calc(100% + 8px); background: var(--navy); color: #fff;
+  font-size: 0.72rem; padding: 8px 12px; border-radius: 8px; white-space: nowrap;
+  max-width: 220px; white-space: normal; text-align: center; z-index: 99;
+  box-shadow: var(--sh-lg); font-family: var(--ff-b); line-height: 1.5;
+}
+.tooltip-wrap:hover .tooltip-box { display: block; }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ============================================================ -->
+  <!-- LEFT PANEL                                                    -->
+  <!-- ============================================================ -->
+  <aside class="left-panel">
+    <div class="left-content">
+
+      <div class="brand">
+        <div class="brand-icon">⛓</div>
+        <div class="brand-name">Pharm<span>Chain</span></div>
+      </div>
+
+      <h2>Distributor <span>Registration</span></h2>
+      <p>Complete all sections to register your organisation as a certified distribution partner on the PharmChain blockchain network.</p>
+
+      <!-- Step progress -->
+      <div class="progress-steps" id="sideSteps">
+        <div class="progress-step">
+          <div class="ps-left"><div class="ps-circle active" id="sc1">1</div><div class="ps-line" id="sl1"></div></div>
+          <div class="ps-content"><div class="ps-title active" id="st1">Company Profile</div><div class="ps-desc active">Organisation & contact details</div></div>
+        </div>
+        <div class="progress-step">
+          <div class="ps-left"><div class="ps-circle" id="sc2">2</div><div class="ps-line" id="sl2"></div></div>
+          <div class="ps-content"><div class="ps-title" id="st2">Licensing & Compliance</div><div class="ps-desc" id="sd2">Regulatory & certification info</div></div>
+        </div>
+        <div class="progress-step">
+          <div class="ps-left"><div class="ps-circle" id="sc3">3</div><div class="ps-line" id="sl3"></div></div>
+          <div class="ps-content"><div class="ps-title" id="st3">Distribution Capacity</div><div class="ps-desc" id="sd3">Coverage, fleet & warehousing</div></div>
+        </div>
+        <div class="progress-step">
+          <div class="ps-left"><div class="ps-circle" id="sc4">4</div><div class="ps-line" id="sl4"></div></div>
+          <div class="ps-content"><div class="ps-title" id="st4">Documents & Uploads</div><div class="ps-desc" id="sd4">Certificates & supporting docs</div></div>
+        </div>
+        <div class="progress-step">
+          <div class="ps-left"><div class="ps-circle" id="sc5">5</div></div>
+          <div class="ps-content"><div class="ps-title" id="st5">Review & Submit</div><div class="ps-desc" id="sd5">Confirm & register on blockchain</div></div>
+        </div>
+      </div>
+
+      <!-- Benefits -->
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-icon">⛓️</div>
+          <div class="benefit-text"><strong>Blockchain-Verified Identity</strong><span>Your company gets a permanent, tamper-proof record</span></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">📦</div>
+          <div class="benefit-text"><strong>Manage Wholesale Orders</strong><span>Receive and dispatch bulk drug orders digitally</span></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">🗺️</div>
+          <div class="benefit-text"><strong>Live GPS Tracking</strong><span>Track every shipment across your network</span></div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- FORM AREA                                                     -->
+  <!-- ============================================================ -->
+  <main class="form-area">
+
+    <!-- Top bar -->
+    <div class="form-topbar">
+      <button class="form-topbar-back" onclick="goBack()">← Back to Dashboard</button>
+      <div class="form-progress-bar"><div class="form-progress-fill" id="progressFill" style="width:20%;"></div></div>
+      <div class="step-label" id="stepLabel">Step 1 of 5</div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- STEP 1: COMPANY PROFILE                          -->
+    <!-- ================================================ -->
+    <div class="step active" id="step1">
+      <div class="section-heading">
+        <div class="section-eyebrow">🏢 Step 1 of 5</div>
+        <h2>Company Profile</h2>
+        <p>Enter your organisation's basic identity, contact details, and registered address.</p>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon">🏢</div>
+          <div><div class="fch-title">Organisation Information</div><div class="fch-sub">Legal company name and business type</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="field-grid">
+            <div class="field field-full" id="f-companyName">
+              <label>Company / Organisation Name <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">🏢</span>
+                <input type="text" id="companyName" placeholder="e.g. HealthDist Nigeria Ltd" oninput="validateField('f-companyName','companyName')"/>
+              </div>
+              <div class="field-error">Company name is required</div>
+            </div>
+
+            <div class="field" id="f-distType">
+              <label>Distributor Type <span class="req">*</span>
+                <div class="tooltip-wrap"><div class="tooltip-icon">?</div><div class="tooltip-box">National distributors serve all 36 states. Regional serve a geopolitical zone. State distributors operate within one state. Last-Mile handle final delivery to retailers.</div></div>
+              </label>
+              <select id="distType" onchange="validateField('f-distType','distType')">
+                <option value="">Select distributor type...</option>
+                <option>National Distributor</option>
+                <option>Regional Distributor</option>
+                <option>State Distributor</option>
+                <option>Last-Mile Distributor</option>
+                <option>Specialist / Niche Distributor</option>
+              </select>
+              <div class="field-error">Please select a distributor type</div>
+            </div>
+
+            <div class="field" id="f-businessReg">
+              <label>CAC Business Reg. Number <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">📋</span>
+                <input type="text" id="businessReg" placeholder="e.g. RC-1234567" oninput="validateField('f-businessReg','businessReg')"/>
+              </div>
+              <div class="field-error">CAC registration number is required</div>
+              <div class="field-hint">As registered with the Corporate Affairs Commission</div>
+            </div>
+
+            <div class="field" id="f-taxId">
+              <label>Tax Identification Number (TIN)</label>
+              <div class="input-wrap">
+                <span class="input-icon">🧾</span>
+                <input type="text" id="taxId" placeholder="e.g. 12345678-0001"/>
+              </div>
+              <div class="field-hint">Optional but recommended for verification</div>
+            </div>
+
+            <div class="field" id="f-yearEst">
+              <label>Year Established <span class="req">*</span></label>
+              <select id="yearEst" onchange="validateField('f-yearEst','yearEst')">
+                <option value="">Select year...</option>
+                <script>for(let y=new Date().getFullYear();y>=1960;y--) document.write(`<option>${y}</option>`);</script>
+              </select>
+              <div class="field-error">Year of establishment is required</div>
+            </div>
+
+            <div class="field">
+              <label>Number of Employees</label>
+              <select>
+                <option value="">Select range...</option>
+                <option>1 – 10</option>
+                <option>11 – 50</option>
+                <option>51 – 200</option>
+                <option>201 – 500</option>
+                <option>501 – 1,000</option>
+                <option>1,000+</option>
+              </select>
+            </div>
+
+            <div class="field field-full">
+              <label>Company Description</label>
+              <textarea id="companyDesc" placeholder="Briefly describe your company, its core business, pharmaceutical focus areas, and key markets..." oninput="updateCharCount(this,'descCount',300)" maxlength="300"></textarea>
+              <div class="char-counter"><span id="descCount">0</span>/300 characters</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Contact -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon teal">👤</div>
+          <div><div class="fch-title">Primary Contact Person</div><div class="fch-sub">The main point of contact for PharmChain communications</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="field-grid">
+            <div class="field" id="f-firstName">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="firstName" placeholder="First name" oninput="validateField('f-firstName','firstName')"/>
+              <div class="field-error">First name is required</div>
+            </div>
+            <div class="field" id="f-lastName">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="lastName" placeholder="Last name" oninput="validateField('f-lastName','lastName')"/>
+              <div class="field-error">Last name is required</div>
+            </div>
+            <div class="field">
+              <label>Job Title / Position</label>
+              <select>
+                <option value="">Select position...</option>
+                <option>Chief Executive Officer (CEO)</option>
+                <option>Managing Director (MD)</option>
+                <option>Pharmaceutical Director</option>
+                <option>General Manager</option>
+                <option>Operations Manager</option>
+                <option>Compliance Officer</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field" id="f-email">
+              <label>Official Email Address <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">📧</span>
+                <input type="email" id="email" placeholder="contact@company.com" oninput="validateEmail()"/>
+              </div>
+              <div class="field-error" id="emailError">Please enter a valid email address</div>
+            </div>
+            <div class="field" id="f-phone">
+              <label>Primary Phone Number <span class="req">*</span></label>
+              <div class="phone-wrap">
+                <select class="phone-code">
+                  <option>🇳🇬 +234</option>
+                  <option>🇬🇧 +44</option>
+                  <option>🇺🇸 +1</option>
+                  <option>🇬🇭 +233</option>
+                </select>
+                <input type="tel" id="phone" placeholder="800 000 0000" style="flex:1;" oninput="validateField('f-phone','phone')"/>
+              </div>
+              <div class="field-error">Phone number is required</div>
+            </div>
+            <div class="field">
+              <label>Alternate Phone Number</label>
+              <div class="phone-wrap">
+                <select class="phone-code">
+                  <option>🇳🇬 +234</option>
+                  <option>🇬🇧 +44</option>
+                  <option>🇺🇸 +1</option>
+                </select>
+                <input type="tel" placeholder="800 000 0001" style="flex:1;"/>
+              </div>
+            </div>
+            <div class="field">
+              <label>WhatsApp Number</label>
+              <div class="input-wrap">
+                <span class="input-icon">💬</span>
+                <input type="tel" placeholder="+234 800 000 0000"/>
+              </div>
+            </div>
+            <div class="field">
+              <label>Official Website</label>
+              <div class="input-wrap">
+                <span class="input-icon">🌐</span>
+                <input type="url" placeholder="https://www.yourcompany.com"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon amber">📍</div>
+          <div><div class="fch-title">Registered Business Address</div><div class="fch-sub">Company's official registered address as per CAC records</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="field-grid">
+            <div class="field field-full" id="f-address1">
+              <label>Street Address Line 1 <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">🏠</span>
+                <input type="text" id="address1" placeholder="House/Block number, Street name" oninput="validateField('f-address1','address1')"/>
+              </div>
+              <div class="field-error">Street address is required</div>
+            </div>
+            <div class="field field-full">
+              <label>Street Address Line 2</label>
+              <input type="text" placeholder="Suite, Floor, Building name (optional)"/>
+            </div>
+            <div class="field" id="f-city">
+              <label>City / Town <span class="req">*</span></label>
+              <input type="text" id="city" placeholder="e.g. Lagos" oninput="validateField('f-city','city')"/>
+              <div class="field-error">City is required</div>
+            </div>
+            <div class="field" id="f-state">
+              <label>State <span class="req">*</span></label>
+              <select id="state" onchange="validateField('f-state','state')">
+                <option value="">Select state...</option>
+                <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option>
+                <option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option>
+                <option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option>
+                <option>Ekiti</option><option>Enugu</option><option>FCT - Abuja</option><option>Gombe</option>
+                <option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option>
+                <option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+                <option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option>
+                <option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option>
+                <option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option>
+              </select>
+              <div class="field-error">State is required</div>
+            </div>
+            <div class="field">
+              <label>LGA (Local Government Area)</label>
+              <input type="text" placeholder="e.g. Ikeja"/>
+            </div>
+            <div class="field">
+              <label>Postal / ZIP Code</label>
+              <input type="text" placeholder="e.g. 100001"/>
+            </div>
+            <div class="field">
+              <label>Country</label>
+              <select>
+                <option>Nigeria</option>
+                <option>Ghana</option>
+                <option>United Kingdom</option>
+                <option>United States</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary btn-lg" onclick="goNext(1)">Continue → Licensing & Compliance</button>
+      </div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- STEP 2: LICENSING & COMPLIANCE                   -->
+    <!-- ================================================ -->
+    <div class="step" id="step2">
+      <div class="section-heading">
+        <div class="section-eyebrow">📋 Step 2 of 5</div>
+        <h2>Licensing & Compliance</h2>
+        <p>Provide your regulatory licences, certifications, and compliance credentials.</p>
+      </div>
+
+      <!-- PCN Licence -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon">📜</div>
+          <div><div class="fch-title">Pharmacy Council of Nigeria (PCN) Licence</div><div class="fch-sub">Mandatory for all pharmaceutical distributors in Nigeria</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="info-box amber" style="margin-bottom:20px;">
+            <div class="ib-icon">⚠️</div>
+            <div><div class="ib-title">PCN Licence Required</div><div class="ib-text">All pharmaceutical distributors operating in Nigeria must hold a valid PCN Distributor Licence. Your application cannot be approved without a verifiable PCN number.</div></div>
+          </div>
+          <div class="field-grid">
+            <div class="field" id="f-pcnNum">
+              <label>PCN Licence Number <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">🔢</span>
+                <input type="text" id="pcnNum" placeholder="e.g. PCN-DIST-2024-00281" oninput="validateField('f-pcnNum','pcnNum')"/>
+              </div>
+              <div class="field-error">PCN licence number is required</div>
+            </div>
+            <div class="field" id="f-pcnDate">
+              <label>PCN Issue Date <span class="req">*</span></label>
+              <input type="date" id="pcnDate" onchange="validateField('f-pcnDate','pcnDate')"/>
+              <div class="field-error">Licence issue date is required</div>
+            </div>
+            <div class="field" id="f-pcnExpiry">
+              <label>PCN Expiry Date <span class="req">*</span></label>
+              <input type="date" id="pcnExpiry" onchange="validatePCNExpiry()"/>
+              <div class="field-error" id="pcnExpiryError">Expiry date is required</div>
+            </div>
+            <div class="field">
+              <label>PCN Licence Category</label>
+              <select>
+                <option value="">Select category...</option>
+                <option>Wholesale Distribution</option>
+                <option>Retail + Wholesale</option>
+                <option>Import / Export + Distribution</option>
+                <option>Manufacturing + Distribution</option>
+              </select>
+            </div>
+            <div class="field field-full">
+              <label>PCN Licenced Superintendent Pharmacist</label>
+              <div class="field-grid" style="margin-top:4px;">
+                <input type="text" placeholder="Full name of superintendent pharmacist"/>
+                <input type="text" placeholder="PCN registration number (e.g. PCN/PH/12345)"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAFDAC -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon teal">🏛️</div>
+          <div><div class="fch-title">NAFDAC Registration</div><div class="fch-sub">National Agency for Food and Drug Administration and Control</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="field-grid">
+            <div class="field" id="f-nafdacNum">
+              <label>NAFDAC Registration Number <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">🔢</span>
+                <input type="text" id="nafdacNum" placeholder="e.g. NAFDAC/DIST/2024/0041" oninput="validateField('f-nafdacNum','nafdacNum')"/>
+              </div>
+              <div class="field-error">NAFDAC number is required</div>
+            </div>
+            <div class="field">
+              <label>NAFDAC Certificate Expiry</label>
+              <input type="date"/>
+            </div>
+            <div class="field">
+              <label>Last NAFDAC Inspection Date</label>
+              <input type="date"/>
+            </div>
+            <div class="field">
+              <label>Last NAFDAC Inspection Result</label>
+              <select>
+                <option value="">Select result...</option>
+                <option>Satisfactory (Grade A)</option>
+                <option>Satisfactory (Grade B)</option>
+                <option>Conditional Pass</option>
+                <option>Not Yet Inspected</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Certs -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon green">✅</div>
+          <div><div class="fch-title">Additional Certifications</div><div class="fch-sub">Select all certifications your organisation currently holds</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="radio-group" style="margin-bottom:20px;">
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> ISO 9001:2015 (Quality Management)</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> ISO 13485 (Medical Devices)</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> GDP Certified (Good Distribution Practice)</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> GMP Certified (Good Manufacturing Practice)</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> WHO Pre-qualified</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> SON Certified (Standards Organisation of Nigeria)</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> HIPAA Compliant</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> NDLEA Registered (Controlled Substances)</label>
+          </div>
+          <div class="field">
+            <label>Other Certifications Not Listed</label>
+            <input type="text" placeholder="Separate multiple certifications with commas"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compliance -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon navy">⚖️</div>
+          <div><div class="fch-title">Regulatory Compliance History</div><div class="fch-sub">Previous regulatory actions, sanctions, or violations</div></div>
+        </div>
+        <div class="form-card-body">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>Ever had a PCN licence suspended or revoked?</strong><span>Include any past licence suspensions within the last 10 years</span></div>
+              <label class="toggle-switch"><input type="checkbox" id="tg1" onchange="showConditional('tg1','cond1')"/><span class="toggle-slider"></span></label>
+            </div>
+            <div id="cond1" style="display:none;padding:14px 0;">
+              <div class="field"><label>Please provide details</label><textarea placeholder="Describe the suspension/revocation, dates, reason, and outcome..." style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>Ever subject to NAFDAC enforcement action?</strong><span>Product recalls, seizures, or enforcement notices</span></div>
+              <label class="toggle-switch"><input type="checkbox" id="tg2" onchange="showConditional('tg2','cond2')"/><span class="toggle-slider"></span></label>
+            </div>
+            <div id="cond2" style="display:none;padding:14px 0;">
+              <div class="field"><label>Please provide details</label><textarea placeholder="Describe the enforcement action, dates, and resolution..." style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>Any pending litigation or legal action?</strong><span>Include any ongoing court cases related to pharmaceutical distribution</span></div>
+              <label class="toggle-switch"><input type="checkbox" id="tg3" onchange="showConditional('tg3','cond3')"/><span class="toggle-slider"></span></label>
+            </div>
+            <div id="cond3" style="display:none;padding:14px 0;">
+              <div class="field"><label>Please provide details</label><textarea placeholder="Describe the litigation, parties involved, and current status..." style="min-height:70px;"></textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(1)">← Back</button>
+        <button class="btn btn-primary btn-lg" onclick="goNext(2)">Continue → Distribution Capacity</button>
+      </div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- STEP 3: DISTRIBUTION CAPACITY                    -->
+    <!-- ================================================ -->
+    <div class="step" id="step3">
+      <div class="section-heading">
+        <div class="section-eyebrow">🚚 Step 3 of 5</div>
+        <h2>Distribution Capacity</h2>
+        <p>Tell us about your warehousing, fleet, cold chain capabilities, and geographic coverage.</p>
+      </div>
+
+      <!-- Coverage Zones -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon">🗺️</div>
+          <div><div class="fch-title">Geographic Coverage Zones</div><div class="fch-sub">Select all geopolitical zones your organisation can distribute to</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="zone-grid" id="zoneGrid">
+            <div class="zone-card" onclick="toggleZone(this)"><input type="checkbox"/><div class="zone-icon">🏙️</div><div class="zone-name">South West</div><div class="zone-states">Lagos, Ogun, Oyo, Osun, Ondo, Ekiti</div></div>
+            <div class="zone-card" onclick="toggleZone(this)"><input type="checkbox"/><div class="zone-icon">🌿</div><div class="zone-name">South East</div><div class="zone-states">Enugu, Anambra, Imo, Abia, Ebonyi</div></div>
+            <div class="zone-card" onclick="toggleZone(this)"><input type="checkbox"/><div class="zone-icon">🌊</div><div class="zone-name">South South</div><div class="zone-states">Rivers, Delta, Cross River, Edo, Bayelsa, Akwa Ibom</div></div>
+            <div class="zone-card" onclick="toggleZone(this)"><input type="checkbox"/><div class="zone-icon">🏛️</div><div class="zone-name">North Central</div><div class="zone-states">Abuja FCT, Kogi, Benue, Plateau, Nasarawa, Niger, Kwara</div></div>
+            <div class="zone-card" onclick="toggleZone(this)"><input type="checkbox"/><div class="zone-icon">🏜️</div><div class="zone-name">North East</div><div class="zone-states">Borno, Adamawa, Yobe, Gombe, Taraba, Bauchi</div></div>
+            <div class="zone-card" onclick="toggleZone(this)"><input type="checkbox"/><div class="zone-icon">☀️</div><div class="zone-name">North West</div><div class="zone-states">Kano, Kaduna, Sokoto, Kebbi, Katsina, Jigawa, Zamfara</div></div>
+          </div>
+          <div style="margin-top:16px;display:flex;align-items:center;gap:10px;">
+            <label class="radio-opt" onclick="toggleAllZones(this)" style="flex:1;justify-content:center;">
+              <input type="checkbox" id="allZones"/> All Zones — National Coverage
+            </label>
+          </div>
+          <div class="field" style="margin-top:16px;">
+            <label>Specific States Within Zones (Optional)</label>
+            <input type="text" placeholder="e.g. Lagos, Abuja, Kano, Rivers..."/>
+            <div class="field-hint">List specific states if you don't cover the entire zone</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Warehouse -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon amber">🏭</div>
+          <div><div class="fch-title">Warehouse & Storage Facilities</div><div class="fch-sub">Details of your pharmaceutical storage infrastructure</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="field-grid">
+            <div class="field" id="f-whAddress">
+              <label>Primary Warehouse Address <span class="req">*</span></label>
+              <div class="input-wrap">
+                <span class="input-icon">📍</span>
+                <input type="text" id="whAddress" placeholder="Full warehouse address" oninput="validateField('f-whAddress','whAddress')"/>
+              </div>
+              <div class="field-error">Warehouse address is required</div>
+            </div>
+            <div class="field">
+              <label>Warehouse Size</label>
+              <div class="input-wrap">
+                <input type="number" placeholder="e.g. 5000"/>
+                <span class="input-suffix">m²</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Storage Capacity</label>
+              <select>
+                <option value="">Select capacity...</option>
+                <option>Below 1,000 pallets</option>
+                <option>1,000 – 5,000 pallets</option>
+                <option>5,000 – 15,000 pallets</option>
+                <option>15,000 – 50,000 pallets</option>
+                <option>50,000+ pallets</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Number of Warehouse Locations</label>
+              <div class="fleet-counter">
+                <button type="button" class="fleet-btn" onclick="adjustCount('whCount',-1)">−</button>
+                <div class="fleet-num" id="whCount">1</div>
+                <button type="button" class="fleet-btn" onclick="adjustCount('whCount',1)">+</button>
+              </div>
+            </div>
+          </div>
+          <hr class="divider"/>
+          <div class="field-grid" style="margin-top:0;">
+            <div class="field">
+              <label>Ambient Temperature Range</label>
+              <div class="field-grid" style="gap:8px;">
+                <div class="input-wrap"><input type="number" placeholder="Min °C"/></div>
+                <div class="input-wrap"><input type="number" placeholder="Max °C"/></div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Humidity Control</label>
+              <select>
+                <option value="">Select...</option>
+                <option>Full Climate Control</option>
+                <option>Partial Humidity Control</option>
+                <option>Air-conditioned (no humidity)</option>
+                <option>Ambient Only</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Security Systems</label>
+              <div class="radio-group">
+                <label class="radio-opt" style="flex:1;" onclick="toggleRadio(this)"><input type="checkbox"/> CCTV</label>
+                <label class="radio-opt" style="flex:1;" onclick="toggleRadio(this)"><input type="checkbox"/> Access Control</label>
+                <label class="radio-opt" style="flex:1;" onclick="toggleRadio(this)"><input type="checkbox"/> 24/7 Guards</label>
+                <label class="radio-opt" style="flex:1;" onclick="toggleRadio(this)"><input type="checkbox"/> Alarm System</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>WMS (Warehouse Management System)</label>
+              <select>
+                <option value="">Select...</option>
+                <option>SAP WM / EWM</option>
+                <option>Oracle WMS</option>
+                <option>Microsoft Dynamics</option>
+                <option>Custom/Proprietary System</option>
+                <option>Manual (No WMS)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cold Chain -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon teal">❄️</div>
+          <div><div class="fch-title">Cold Chain Capabilities</div><div class="fch-sub">Temperature-controlled storage and transport for sensitive pharmaceuticals</div></div>
+        </div>
+        <div class="form-card-body">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>Full Cold Chain Capability?</strong><span>2°C – 8°C refrigerated storage and transport available</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>Deep Freeze Capability?</strong><span>−15°C to −25°C for vaccines and biologics</span></div>
+              <label class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>Temperature Data Loggers?</strong><span>Real-time temperature monitoring during transit</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info"><strong>GDP-Compliant Cold Chain Procedures?</strong><span>Written cold chain SOPs in place</span></div>
+              <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <div class="field-grid" style="margin-top:20px;">
+            <div class="field">
+              <label>Number of Refrigerated Storage Units</label>
+              <div class="fleet-counter">
+                <button type="button" class="fleet-btn" onclick="adjustCount('coldCount',-1)">−</button>
+                <div class="fleet-num" id="coldCount">0</div>
+                <button type="button" class="fleet-btn" onclick="adjustCount('coldCount',1)">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Cold Storage Total Capacity</label>
+              <div class="input-wrap">
+                <input type="number" placeholder="e.g. 500"/>
+                <span class="input-suffix">m³</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Cold Chain Validation Status</label>
+              <select>
+                <option value="">Select...</option>
+                <option>Fully Validated (IQ/OQ/PQ)</option>
+                <option>Partially Validated</option>
+                <option>In Progress</option>
+                <option>Not Yet Validated</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Cold Chain Provider / Partner</label>
+              <input type="text" placeholder="e.g. DHL Supply Chain, Coldroom Nigeria..."/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fleet -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon red">🚚</div>
+          <div><div class="fch-title">Fleet & Logistics</div><div class="fch-sub">Your distribution vehicles and delivery infrastructure</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Total Fleet Size (Owned)</label>
+              <div class="fleet-counter">
+                <button type="button" class="fleet-btn" onclick="adjustCount('ownedFleet',-1)">−</button>
+                <div class="fleet-num" id="ownedFleet">0</div>
+                <button type="button" class="fleet-btn" onclick="adjustCount('ownedFleet',1)">+</button>
+              </div>
+              <div class="field-hint">Number of company-owned vehicles</div>
+            </div>
+            <div class="field">
+              <label>Refrigerated Trucks (Owned)</label>
+              <div class="fleet-counter">
+                <button type="button" class="fleet-btn" onclick="adjustCount('refFleet',-1)">−</button>
+                <div class="fleet-num" id="refFleet">0</div>
+                <button type="button" class="fleet-btn" onclick="adjustCount('refFleet',1)">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label>Primary Delivery Modes</label>
+              <div class="radio-group">
+                <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox" checked/> Road</label>
+                <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Air</label>
+                <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Rail</label>
+                <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Sea</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>3PL / Logistics Partner</label>
+              <input type="text" placeholder="e.g. DHL, GIG Logistics, UPS..."/>
+            </div>
+            <div class="field">
+              <label>GPS Tracking System</label>
+              <select>
+                <option value="">Select...</option>
+                <option>In-house GPS (All vehicles)</option>
+                <option>In-house GPS (Some vehicles)</option>
+                <option>Third-party GPS Provider</option>
+                <option>No GPS Tracking</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Average Monthly Delivery Volume</label>
+              <select>
+                <option value="">Select range...</option>
+                <option>Below 500 deliveries/month</option>
+                <option>500 – 2,000/month</option>
+                <option>2,000 – 10,000/month</option>
+                <option>10,000 – 50,000/month</option>
+                <option>50,000+/month</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drug Types -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon green">💊</div>
+          <div><div class="fch-title">Drug Categories Handled</div><div class="fch-sub">Select all pharmaceutical categories your organisation distributes</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="radio-group">
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox" checked/> Antibiotics</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox" checked/> Analgesics & NSAIDs</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Antimalarials</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Antivirals / ARVs</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Cardiovascular Drugs</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Diabetes Medications</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Vaccines & Biologics</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Oncology Drugs</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Controlled Substances (Schedule 1–5)</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Generics / OTC Drugs</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Medical Devices / Consumables</label>
+            <label class="radio-opt" onclick="toggleRadio(this)"><input type="checkbox"/> Nutritional / Supplement Products</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(2)">← Back</button>
+        <button class="btn btn-primary btn-lg" onclick="goNext(3)">Continue → Documents & Uploads</button>
+      </div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- STEP 4: DOCUMENTS & UPLOADS                      -->
+    <!-- ================================================ -->
+    <div class="step" id="step4">
+      <div class="section-heading">
+        <div class="section-eyebrow">📁 Step 4 of 5</div>
+        <h2>Documents & Uploads</h2>
+        <p>Upload all required supporting documents for verification. Files must be clear, legible, and not expired.</p>
+      </div>
+
+      <div class="info-box blue" style="margin-bottom:24px;">
+        <div class="ib-icon">ℹ️</div>
+        <div><div class="ib-title">Accepted Formats</div><div class="ib-text">PDF, JPG, PNG, or DOCX only. Maximum file size: 5MB per document. All documents must be in English or accompanied by a certified translation.</div></div>
+      </div>
+
+      <!-- Required docs -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon">📄</div>
+          <div><div class="fch-title">Required Documents <span style="color:var(--red);">*</span></div><div class="fch-sub">All documents below are mandatory for registration approval</div></div>
+        </div>
+        <div class="form-card-body" style="display:flex;flex-direction:column;gap:18px;">
+
+          <div>
+            <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">1. PCN Distributor Licence <span class="req">*</span></div>
+            <div class="file-upload" id="fu1" onclick="simulateUpload('fu1','PCN_Licence.pdf')">
+              <div class="fu-icon">📜</div>
+              <div class="fu-title">Upload PCN Licence Certificate</div>
+              <div class="fu-sub">Click to browse or drag & drop your file here</div>
+              <div class="fu-types">PDF • JPG • PNG • Max 5MB</div>
+              <input type="file" style="display:none;" accept=".pdf,.jpg,.jpeg,.png"/>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">2. NAFDAC Registration Certificate <span class="req">*</span></div>
+            <div class="file-upload" id="fu2" onclick="simulateUpload('fu2','NAFDAC_Certificate.pdf')">
+              <div class="fu-icon">🏛️</div>
+              <div class="fu-title">Upload NAFDAC Certificate</div>
+              <div class="fu-sub">Click to browse or drag & drop your file here</div>
+              <div class="fu-types">PDF • JPG • PNG • Max 5MB</div>
+              <input type="file" style="display:none;"/>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">3. CAC Certificate of Incorporation <span class="req">*</span></div>
+            <div class="file-upload" id="fu3" onclick="simulateUpload('fu3','CAC_Certificate.pdf')">
+              <div class="fu-icon">📋</div>
+              <div class="fu-title">Upload CAC Certificate</div>
+              <div class="fu-sub">Certificate of Incorporation or Business Name Registration</div>
+              <div class="fu-types">PDF • JPG • PNG • Max 5MB</div>
+              <input type="file" style="display:none;"/>
+            </div>
+          </div>
+
+          <div>
+            <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">4. Superintendent Pharmacist's PCN ID <span class="req">*</span></div>
+            <div class="file-upload" id="fu4" onclick="simulateUpload('fu4','SP_PCN_ID.pdf')">
+              <div class="fu-icon">👨‍⚕️</div>
+              <div class="fu-title">Upload Superintendent Pharmacist's ID</div>
+              <div class="fu-sub">PCN registration certificate of the responsible pharmacist</div>
+              <div class="fu-types">PDF • JPG • PNG • Max 5MB</div>
+              <input type="file" style="display:none;"/>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Optional docs -->
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon green">📁</div>
+          <div><div class="fch-title">Additional Supporting Documents (Optional)</div><div class="fch-sub">Upload any additional certificates, audits, or supporting materials</div></div>
+        </div>
+        <div class="form-card-body" style="display:flex;flex-direction:column;gap:18px;">
+
+          <div class="field-grid">
+            <div>
+              <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">ISO / GDP Certificate</div>
+              <div class="file-upload" id="fu5" onclick="simulateUpload('fu5','ISO_Certificate.pdf')" style="padding:16px;">
+                <div class="fu-icon" style="font-size:22px;">📎</div>
+                <div class="fu-title" style="font-size:0.82rem;">Upload ISO/GDP Certificate</div>
+                <div class="fu-types">PDF • Max 5MB</div>
+              </div>
+            </div>
+            <div>
+              <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Warehouse Inspection Report</div>
+              <div class="file-upload" id="fu6" onclick="simulateUpload('fu6','Warehouse_Inspection.pdf')" style="padding:16px;">
+                <div class="fu-icon" style="font-size:22px;">🏭</div>
+                <div class="fu-title" style="font-size:0.82rem;">Upload Inspection Report</div>
+                <div class="fu-types">PDF • Max 5MB</div>
+              </div>
+            </div>
+            <div>
+              <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Cold Chain Validation Report</div>
+              <div class="file-upload" id="fu7" onclick="simulateUpload('fu7','ColdChain_Report.pdf')" style="padding:16px;">
+                <div class="fu-icon" style="font-size:22px;">❄️</div>
+                <div class="fu-title" style="font-size:0.82rem;">Upload Cold Chain Report</div>
+                <div class="fu-types">PDF • Max 5MB</div>
+              </div>
+            </div>
+            <div>
+              <div class="form-label" style="font-size:0.8rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">Company Financial Statement</div>
+              <div class="file-upload" id="fu8" onclick="simulateUpload('fu8','Financial_Statement.pdf')" style="padding:16px;">
+                <div class="fu-icon" style="font-size:22px;">💰</div>
+                <div class="fu-title" style="font-size:0.82rem;">Upload Financial Statement</div>
+                <div class="fu-types">PDF • Max 5MB</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(3)">← Back</button>
+        <button class="btn btn-primary btn-lg" onclick="goNext(4)">Continue → Review & Submit</button>
+      </div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- STEP 5: REVIEW & SUBMIT                          -->
+    <!-- ================================================ -->
+    <div class="step" id="step5">
+      <div class="section-heading">
+        <div class="section-eyebrow">✅ Step 5 of 5</div>
+        <h2>Review & Submit</h2>
+        <p>Please review all your information carefully before submitting. Once registered, your details will be recorded on the PharmChain blockchain and cannot be altered without a formal amendment request.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon">🏢</div>
+          <div><div class="fch-title">Company Profile</div><div class="fch-sub">Organisation & contact information</div></div>
+        </div>
+        <div class="form-card-body">
+          <div class="review-section">
+            <div class="review-section-title">Organisation</div>
+            <table class="review-table">
+              <tr><td>Company Name</td><td id="rv-companyName">—<span class="edit-btn" onclick="goStep(1)">[Edit]</span></td></tr>
+              <tr><td>Distributor Type</td><td id="rv-distType">—</td></tr>
+              <tr><td>CAC Reg. No.</td><td id="rv-businessReg">—</td></tr>
+            </table>
+          </div>
+          <div class="review-section">
+            <div class="review-section-title">Primary Contact</div>
+            <table class="review-table">
+              <tr><td>Contact Person</td><td id="rv-name">—</td></tr>
+              <tr><td>Email</td><td id="rv-email">—</td></tr>
+              <tr><td>Phone</td><td id="rv-phone">—</td></tr>
+              <tr><td>Address</td><td id="rv-address">—</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon teal">📋</div>
+          <div><div class="fch-title">Licensing & Compliance</div></div>
+        </div>
+        <div class="form-card-body">
+          <table class="review-table">
+            <tr><td>PCN Licence No.</td><td id="rv-pcnNum">—<span class="edit-btn" onclick="goStep(2)">[Edit]</span></td></tr>
+            <tr><td>PCN Expiry</td><td id="rv-pcnExpiry">—</td></tr>
+            <tr><td>NAFDAC No.</td><td id="rv-nafdacNum">—</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon amber">🚚</div>
+          <div><div class="fch-title">Distribution Capacity</div></div>
+        </div>
+        <div class="form-card-body">
+          <table class="review-table">
+            <tr><td>Warehouse Address</td><td id="rv-whAddress">—<span class="edit-btn" onclick="goStep(3)">[Edit]</span></td></tr>
+            <tr><td>Owned Vehicles</td><td id="rv-fleet">—</td></tr>
+            <tr><td>Cold Chain</td><td><span class="badge badge-green">✓ Available</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="fch-icon green">📁</div>
+          <div><div class="fch-title">Uploaded Documents</div></div>
+        </div>
+        <div class="form-card-body">
+          <table class="review-table" id="rv-docs">
+            <tr><td>PCN Licence</td><td id="rv-fu1"><span class="badge badge-amber">⏳ Not uploaded</span></td></tr>
+            <tr><td>NAFDAC Certificate</td><td id="rv-fu2"><span class="badge badge-amber">⏳ Not uploaded</span></td></tr>
+            <tr><td>CAC Certificate</td><td id="rv-fu3"><span class="badge badge-amber">⏳ Not uploaded</span></td></tr>
+            <tr><td>Superintendent Pharmacist ID</td><td id="rv-fu4"><span class="badge badge-amber">⏳ Not uploaded</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Declaration -->
+      <div class="form-card" style="border-color:var(--blue);">
+        <div class="form-card-header" style="background:linear-gradient(90deg,var(--blue-lt),white);">
+          <div class="fch-icon navy">⚖️</div>
+          <div><div class="fch-title">Declaration & Consent</div><div class="fch-sub">Read and agree to all declarations before submitting</div></div>
+        </div>
+        <div class="form-card-body" style="display:flex;flex-direction:column;gap:12px;">
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);" id="decl1Wrap" onclick="checkDeclBtn()">
+            <input type="checkbox" id="decl1" style="margin-top:3px;accent-color:var(--blue);width:16px;height:16px;flex-shrink:0;"/>
+            <span style="font-size:0.88rem;color:var(--sub);">I confirm that all information provided in this application is <strong style="color:var(--text);">accurate, complete, and truthful</strong>. I understand that any false or misleading information may result in immediate rejection or permanent ban from the PharmChain network.</span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);" onclick="checkDeclBtn()">
+            <input type="checkbox" id="decl2" style="margin-top:3px;accent-color:var(--blue);width:16px;height:16px;flex-shrink:0;"/>
+            <span style="font-size:0.88rem;color:var(--sub);">I agree to comply with all <strong style="color:var(--text);">PharmChain Network Rules</strong>, NAFDAC regulations, PCN guidelines, and Nigerian pharmaceutical distribution laws at all times during my membership.</span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);" onclick="checkDeclBtn()">
+            <input type="checkbox" id="decl3" style="margin-top:3px;accent-color:var(--blue);width:16px;height:16px;flex-shrink:0;"/>
+            <span style="font-size:0.88rem;color:var(--sub);">I consent to my organisation's registration details, compliance records, and distribution activities being <strong style="color:var(--text);">permanently recorded on the PharmChain blockchain ledger</strong>, which is publicly auditable by authorised regulators.</span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);" onclick="checkDeclBtn()">
+            <input type="checkbox" id="decl4" style="margin-top:3px;accent-color:var(--blue);width:16px;height:16px;flex-shrink:0;"/>
+            <span style="font-size:0.88rem;color:var(--sub);">I have read and agree to the <a href="#" style="color:var(--blue);font-weight:600;">Terms of Service</a>, <a href="#" style="color:var(--blue);font-weight:600;">Privacy Policy</a>, and <a href="#" style="color:var(--blue);font-weight:600;">Distributor Code of Conduct</a>.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="goStep(4)">← Back</button>
+        <button class="btn btn-teal btn-lg" id="submitBtn" onclick="submitForm()" disabled style="opacity:0.5;cursor:not-allowed;">
+          ⛓️ Register on Blockchain
+        </button>
+      </div>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:12px;">⏱ Registration verification typically takes <strong>24–48 business hours</strong> after submission. You will be notified by email.</p>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- SUCCESS SCREEN                                   -->
+    <!-- ================================================ -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-ring">✅</div>
+      <h2>Registration Submitted!</h2>
+      <p>Your distributor application has been recorded on the <strong>PharmChain blockchain</strong>. Our compliance team will verify your documents within 24–48 hours.</p>
+
+      <div class="blockchain-hash-display">
+        <div class="bhd-label">DISTRIBUTOR BLOCKCHAIN HASH (SHA-256)</div>
+        <div class="bhd-hash" id="successHash">Generating...</div>
+        <div class="bhd-block" id="successBlock">Block #— · Pending confirmation...</div>
+      </div>
+
+      <div class="next-steps">
+        <div class="next-step"><div class="ns-icon">📧</div><div class="ns-title">Check Email</div><div class="ns-text">Confirmation sent to your registered address</div></div>
+        <div class="next-step"><div class="ns-icon">📋</div><div class="ns-title">Document Review</div><div class="ns-text">Our team will verify your uploads in 1–2 days</div></div>
+        <div class="next-step"><div class="ns-icon">🚀</div><div class="ns-title">Go Live</div><div class="ns-text">Start receiving drug orders once approved</div></div>
+      </div>
+
+      <div style="margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="window.location.reload()">Register Another Distributor</button>
+        <button class="btn btn-outline">⬇ Download Application Receipt</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+<script>
+// ---- State ----
+let currentStep = 1;
+const totalSteps = 5;
+const uploadedFiles = {};
+let fleetCounts = { whCount: 1, coldCount: 0, ownedFleet: 0, refFleet: 0 };
+
+// ---- Navigation ----
+function goNext(from) {
+  if (!validateStep(from)) return;
+  goStep(from + 1);
+}
+
+function goStep(step) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = step;
+  document.getElementById('step' + step).classList.add('active');
+  updateProgress(step);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (step === 5) populateReview();
+}
+
+function goBack() {
+  if (currentStep > 1) {
+    goStep(currentStep - 1);
+  } else {
+    window.history.back();
+  }
+}
+
+function updateProgress(step) {
+  const pct = ((step - 1) / (totalSteps - 1)) * 100;
+  document.getElementById('progressFill').style.width = Math.max(pct, 8) + '%';
+  document.getElementById('stepLabel').textContent = `Step ${step} of ${totalSteps}`;
+
+  // Side panel steps
+  for (let i = 1; i <= totalSteps; i++) {
+    const circle = document.getElementById('sc' + i);
+    const title  = document.getElementById('st' + i);
+    const desc   = document.getElementById('sd' + i);
+    const line   = document.getElementById('sl' + i);
+
+    circle.classList.remove('active', 'done');
+    title.classList.remove('active', 'done');
+    if (desc) desc.classList.remove('active');
+
+    if (i < step) {
+      circle.classList.add('done');
+      circle.textContent = '✓';
+      title.classList.add('done');
+      if (line) line.classList.add('done');
+    } else if (i === step) {
+      circle.classList.add('active');
+      circle.textContent = i;
+      title.classList.add('active');
+      if (desc) desc.classList.add('active');
+    } else {
+      circle.textContent = i;
+      if (line) line.classList.remove('done');
+    }
+  }
+}
+
+// ---- Validation ----
+function validateStep(step) {
+  if (step === 1) {
+    const fields = [
+      ['f-companyName', 'companyName'],
+      ['f-distType', 'distType'],
+      ['f-businessReg', 'businessReg'],
+      ['f-yearEst', 'yearEst'],
+      ['f-firstName', 'firstName'],
+      ['f-lastName', 'lastName'],
+      ['f-email', 'email'],
+      ['f-phone', 'phone'],
+      ['f-address1', 'address1'],
+      ['f-city', 'city'],
+      ['f-state', 'state'],
+    ];
+    let ok = true;
+    fields.forEach(([fid, iid]) => {
+      const el = document.getElementById(iid);
+      if (!el || !el.value.trim()) {
+        document.getElementById(fid).classList.add('invalid');
+        document.getElementById(fid).classList.remove('valid');
+        ok = false;
+      } else {
+        document.getElementById(fid).classList.remove('invalid');
+        document.getElementById(fid).classList.add('valid');
+      }
+    });
+    if (!ok) {
+      shakeForm();
+      showBanner('⚠️ Please fill in all required fields before continuing.');
+    }
+    return ok;
+  }
+  if (step === 2) {
+    const pcn = document.getElementById('pcnNum').value.trim();
+    const nafd = document.getElementById('nafdacNum').value.trim();
+    if (!pcn || !nafd) {
+      showBanner('⚠️ PCN licence number and NAFDAC number are required.');
+      return false;
+    }
+  }
+  if (step === 3) {
+    const wh = document.getElementById('whAddress').value.trim();
+    if (!wh) {
+      showBanner('⚠️ Warehouse address is required.');
+      return false;
+    }
+  }
+  return true;
+}
+
+function validateField(wrapperId, inputId) {
+  const wrapper = document.getElementById(wrapperId);
+  const input = document.getElementById(inputId);
+  if (input && input.value.trim()) {
+    wrapper.classList.remove('invalid');
+    wrapper.classList.add('valid');
+  }
+}
+
+function validateEmail() {
+  const email = document.getElementById('email').value;
+  const wrapper = document.getElementById('f-email');
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (re.test(email)) {
+    wrapper.classList.remove('invalid'); wrapper.classList.add('valid');
+    document.getElementById('emailError').textContent = '';
+  } else if (email.length > 0) {
+    wrapper.classList.add('invalid'); wrapper.classList.remove('valid');
+    document.getElementById('emailError').textContent = 'Please enter a valid email address';
+  }
+}
+
+function validatePCNExpiry() {
+  const val = document.getElementById('pcnExpiry').value;
+  const wrapper = document.getElementById('f-pcnExpiry');
+  if (!val) { wrapper.classList.add('invalid'); return; }
+  const d = new Date(val);
+  const today = new Date();
+  if (d < today) {
+    wrapper.classList.add('invalid');
+    document.getElementById('pcnExpiryError').textContent = '⚠️ This licence appears to have expired. Please upload a current licence.';
+  } else {
+    wrapper.classList.remove('invalid'); wrapper.classList.add('valid');
+    document.getElementById('pcnExpiryError').textContent = 'Expiry date is required';
+  }
+}
+
+// ---- Fleet counters ----
+function adjustCount(id, delta) {
+  fleetCounts[id] = Math.max(0, (fleetCounts[id] || 0) + delta);
+  document.getElementById(id).textContent = fleetCounts[id];
+}
+
+// ---- Zone selection ----
+function toggleZone(el) {
+  el.classList.toggle('selected');
+  const cb = el.querySelector('input');
+  if (cb) cb.checked = el.classList.contains('selected');
+  document.getElementById('allZones').checked = false;
+}
+function toggleAllZones(el) {
+  const checked = document.getElementById('allZones').checked;
+  document.querySelectorAll('#zoneGrid .zone-card').forEach(z => {
+    if (checked) { z.classList.add('selected'); z.querySelector('input').checked = true; }
+    else { z.classList.remove('selected'); z.querySelector('input').checked = false; }
+  });
+}
+
+// ---- Radio / Checkbox toggle ----
+function toggleRadio(el) {
+  el.classList.toggle('selected');
+}
+
+// ---- Toggle conditional fields ----
+function showConditional(toggleId, condId) {
+  const on = document.getElementById(toggleId).checked;
+  document.getElementById(condId).style.display = on ? 'block' : 'none';
+}
+
+// ---- Char counter ----
+function updateCharCount(el, countId, max) {
+  document.getElementById(countId).textContent = el.value.length;
+}
+
+// ---- File upload simulation ----
+function simulateUpload(fuId, filename) {
+  const el = document.getElementById(fuId);
+  el.classList.add('has-file');
+  el.innerHTML = `
+    <div class="fu-icon" style="font-size:28px;">✅</div>
+    <div class="fu-title" style="color:var(--green);">${filename}</div>
+    <div class="fu-sub" style="color:var(--green);">File uploaded successfully</div>
+    <div class="fu-types" style="color:var(--muted);margin-top:4px;">Click to replace</div>
+  `;
+  uploadedFiles[fuId] = filename;
+  // Update review
+  const rv = document.getElementById('rv-' + fuId);
+  if (rv) rv.innerHTML = `<span class="badge badge-green">✓ ${filename}</span>`;
+}
+
+// ---- Populate review ----
+function populateReview() {
+  const g = (id) => { const el = document.getElementById(id); return el ? (el.value || '—') : '—'; };
+  document.getElementById('rv-companyName').innerHTML = g('companyName') + '<span class="edit-btn" onclick="goStep(1)">[Edit]</span>';
+  document.getElementById('rv-distType').textContent = g('distType');
+  document.getElementById('rv-businessReg').textContent = g('businessReg');
+  document.getElementById('rv-name').textContent = g('firstName') + ' ' + g('lastName');
+  document.getElementById('rv-email').textContent = g('email');
+  document.getElementById('rv-phone').textContent = '+234 ' + g('phone');
+  document.getElementById('rv-address').textContent = [g('address1'), g('city'), g('state')].filter(x=>x&&x!=='—').join(', ') || '—';
+  document.getElementById('rv-pcnNum').innerHTML = g('pcnNum') + '<span class="edit-btn" onclick="goStep(2)">[Edit]</span>';
+  document.getElementById('rv-pcnExpiry').textContent = g('pcnExpiry') || '—';
+  document.getElementById('rv-nafdacNum').textContent = g('nafdacNum') || '—';
+  document.getElementById('rv-whAddress').innerHTML = g('whAddress') + '<span class="edit-btn" onclick="goStep(3)">[Edit]</span>';
+  document.getElementById('rv-fleet').textContent = fleetCounts.ownedFleet + ' owned vehicles';
+  // Docs
+  ['fu1','fu2','fu3','fu4'].forEach(f => {
+    const rv = document.getElementById('rv-' + f);
+    if (rv && !uploadedFiles[f]) rv.innerHTML = '<span class="badge badge-amber">⏳ Not uploaded</span>';
+  });
+}
+
+// ---- Declaration check ----
+function checkDeclBtn() {
+  setTimeout(() => {
+    const all = ['decl1','decl2','decl3','decl4'].every(id => document.getElementById(id) && document.getElementById(id).checked);
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = !all;
+    btn.style.opacity = all ? '1' : '0.5';
+    btn.style.cursor = all ? 'pointer' : 'not-allowed';
+  }, 10);
+}
+
+// ---- Submit ----
+function submitForm() {
+  // Show success
+  document.getElementById('step5').classList.remove('active');
+  document.getElementById('successScreen').classList.add('active');
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('stepLabel').textContent = 'Registered ✓';
+  updateProgress(5);
+
+  // Generate hash
+  const hash = '0x' + Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+  const block = 2847391 + Math.floor(Math.random() * 100);
+  document.getElementById('successHash').textContent = hash;
+  document.getElementById('successBlock').textContent = `Block #${block.toLocaleString()} · Confirmed · ${new Date().toUTCString()}`;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- Helpers ----
+function shakeForm() {
+  const form = document.getElementById('step' + currentStep);
+  form.style.animation = 'none';
+  form.offsetHeight;
+  form.style.animation = 'shake 0.4s ease';
+}
+
+let bannerTimeout;
+function showBanner(msg) {
+  let b = document.getElementById('formBanner');
+  if (!b) {
+    b = document.createElement('div');
+    b.id = 'formBanner';
+    b.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 24px;border-radius:10px;font-size:0.88rem;z-index:9999;box-shadow:var(--sh-lg);border-left:4px solid var(--red);max-width:90vw;text-align:center;transition:all 0.3s;`;
+    document.body.appendChild(b);
+  }
+  b.textContent = msg;
+  b.style.opacity = '1';
+  b.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(bannerTimeout);
+  bannerTimeout = setTimeout(() => {
+    b.style.opacity = '0';
+    b.style.transform = 'translateX(-50%) translateY(-10px)';
+  }, 3500);
+}
+
+// Shake animation
+const shakeCSS = document.createElement('style');
+shakeCSS.textContent = '@keyframes shake{0%,100%{transform:none}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}';
+document.head.appendChild(shakeCSS);
+
+// Init
+updateProgress(1);
+</script>
+
+</body>
+</html>
